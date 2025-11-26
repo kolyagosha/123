@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статус Сдачи | SSRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 700px; margin-top: 50px; margin-bottom: 50px; }
+        .status-box { padding: 30px; border-radius: 12px; text-align: center; }
+        .status-on-review { background-color: #fff3cd; border: 1px solid #ffc107; color: #664d03; }
+        .status-passed { background-color: #d1e7dd; border: 1px solid #0f5132; color: #0f5132; }
+        .status-failed { background-color: #f8d7da; border: 1px solid #842029; color: #842029; }
+        .appeal-section { border: 2px dashed #007bff; padding: 15px; margin-top: 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center text-primary mb-4">SSRM: Твой Зачетный Статус</h1>
+        
+        <div id="statusContainer">
+            </div>
+
+        <div class="card mt-4 p-4">
+            <h5 class="card-title">Сводка по последнему тесту (Ускоренная Сертификация)</h5>
+            <p><strong>Контрольное Слово:</strong> <span id="controlWordSummary">N/A</span></p>
+            <p><strong>Дата Сдачи:</strong> <span id="submissionDateSummary">N/A</span></p>
+            <p><strong>Пульс P3 (Восстановление):</strong> <span id="pulseP3Summary">N/A</span></p>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script> 
+</body>
+</html>
