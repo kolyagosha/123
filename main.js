@@ -315,3 +315,158 @@ if (document.getElementById('instructorLoginForm')) {
         document.getElementById('instructorLoginForm').addEventListener('submit', handleInstructorLogin);
     });
 }
+
+// === БЛОК: МОКОВЫЕ ДАННЫЕ И ЛОГИКА ПРЕПОДАВАТЕЛЯ ===
+
+// Моковые данные заданий (имитация Firestore)
+// Для демонстрации: Студент 1: Сдано 1 день назад (Зеленый); Студент 2: Сдано 10 дней назад (Желтый); Студент 3: Сдано 14 дней назад (Просрочено!)
+const msInDay = 1000 * 60 * 60 * 24;
+const mockStudentQuests = [
+    { id: 'Q001', studentName: 'Иванов И.И.', instructorId: 'I001', assignedInstructor: 'Иванов С.В.',
+      dateSubmitted: new Date(Date.now() - (1 * msInDay)), // 1 день назад
+      controlWord: 'A1B2C3', pulseP1: 72, pulseP2: 155, pulseP3: 95, 
+      videoURL: '#', status: 'Ожидает Проверки', faculty: 'ПМ', group: 'ПМ-21' },
+    
+    { id: 'Q002', studentName: 'Петрова А.С.', instructorId: 'I002', assignedInstructor: 'Петров А.Б.',
+      dateSubmitted: new Date(Date.now() - (10 * msInDay)), // 10 дней назад
+      controlWord: 'X9Y8Z7', pulseP1: 68, pulseP2: 140, pulseP3: 78, 
+      videoURL: '#', status: 'Ожидает Проверки', faculty: 'ЮР', group: 'ЮР-20' },
+      
+    { id: 'Q003', studentName: 'Сидоров О.П.', instructorId: 'I001', assignedInstructor: 'Иванов С.В.',
+      dateSubmitted: new Date(Date.now() - (15 * msInDay)), // 15 дней назад (Просрочено!)
+      controlWord: '7KLA1P', pulseP1: 75, pulseP2: 160, pulseP3: 100, 
+      videoURL: '#', status: 'Ожидает Проверки', faculty: 'ЭК', group: 'ЭК-22' }
+];
+
+// 1. ФУНКЦИЯ РАСЧЕТА СВЕТОФОРА (Логика 7-4-1)
+function calculateUrgency(submissionDate) {
+    const deadlineDays = 14; 
+    const msInDay = 1000 * 60 * 60 * 24;
+    const now = new Date();
+
+    const deadlineTime = submissionDate.getTime() + (deadlineDays * msInDay);
+    const daysLeft = Math.ceil((deadlineTime - now.getTime()) / msInDay);
+    
+    let color = 'secondary'; // Серый (если уже проверено)
+    let displayDays = `${daysLeft} дн.`;
+    
+    if (daysLeft > 7) {
+        color = 'success'; // Зеленый: > 7 дней
+    } else if (daysLeft <= 7 && daysLeft > 4) {
+        color = 'success'; // Тоже Зеленый (до 4 дней)
+    } else if (daysLeft <= 4 && daysLeft > 0) {
+        color = 'warning'; // Желтый: осталось 4 дня
+    } else if (daysLeft === 0) {
+        color = 'danger'; // Красный: Сегодня последний день!
+        displayDays = 'СЕГОДНЯ!';
+    } else if (daysLeft < 0) {
+        color = 'dark'; // Темный (Просрочено, эскалация)
+        displayDays = `ПРОСРОЧЕНО (${Math.abs(daysLeft)} дн.)`;
+    }
+    
+    return { daysLeft, color, displayDays };
+}
+
+// 2. ФУНКЦИЯ ОЦЕНКИ ЗАДАНИЯ (Кнопки "Зачет/Не зачет")
+function gradeQuest(questId, result) {
+    const notes = document.getElementById(`notes-${questId}`).value;
+    
+    // Здесь Firebase должен обновить статус задания
+    console.log(`Оценка: ${result}, ID: ${questId}, Комментарии: "${notes}"`);
+    alert(`Оценка "${result}" выставлена и отправлена студенту. Данные сохранены в базе.`);
+    
+    // В MVP: удаляем задание из списка и перерисовываем дашборд
+    const index = mockStudentQuests.findIndex(q => q.id === questId);
+    if (index > -1) {
+        mockStudentQuests.splice(index, 1);
+        renderInstructorDashboard();
+    }
+}
+window.gradeQuest = gradeQuest; // Делаем функцию доступной из HTML
+
+// 3. ФУНКЦИЯ РЕНДЕРИНГА ПАНЕЛИ
+function renderInstructorDashboard() {
+    const instructorRole = localStorage.getItem('currentInstructorRole');
+    const instructorId = localStorage.getItem('currentInstructorId');
+    const listContainer = document.getElementById('questList');
+    const tasksCount = document.getElementById('tasksCount');
+    const filterOverdueButton = document.getElementById('filterOverdue');
+    const welcomeMessage = document.getElementById('welcomeMessage');
+
+    if (!listContainer) return; // Проверка, что мы на нужной странице
+
+    // --- ЛОГИКА ПРИВЕТСТВИЯ И РОЛЕЙ ---
+    if (instructorRole === 'hod') {
+        welcomeMessage.innerHTML = `Добро пожаловать, **Заведующий**! Заданий в работе: <span id="tasksCount" class="badge bg-secondary">0</span>`;
+        filterOverdueButton.style.display = 'block'; // Показываем кнопку аудита
+    } else {
+        welcomeMessage.innerHTML = `Добро пожаловать, Профессор! Заданий в работе: <span id="tasksCount" class="badge bg-secondary">0</span>`;
+        filterOverdueButton.style.display = 'none'; // Скрываем
+    }
+
+    // --- ФИЛЬТРАЦИЯ ЗАДАНИЙ (для Инструктора - только свои; для HoD - все) ---
+    const filteredQuests = mockStudentQuests.filter(quest => {
+        if (instructorRole === 'hod') {
+            return true; // HoD видит все
+        }
+        // Обычный преподаватель видит только свои
+        return quest.instructorId === instructorId;
+    });
+
+    listContainer.innerHTML = '';
+    
+    // --- РЕНДЕРИНГ КАРТОЧЕК ---
+    filteredQuests.sort((a, b) => a.dateSubmitted - b.dateSubmitted); // Сортируем по дате сдачи
+
+    filteredQuests.forEach(quest => {
+        const { daysLeft, color, displayDays } = calculateUrgency(quest.dateSubmitted);
+        
+        const cardHtml = `
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm card-quest border-${color}">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                        <h5 class="mb-0">Студент: ${quest.studentName}</h5>
+                        <span class="badge bg-${color} p-2 text-dark">
+                            ${displayDays}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Факультет:</strong> ${quest.faculty} (${quest.group})</p>
+                        <p><strong>Контрольное Слово:</strong> <span class="fw-bold text-success">${quest.controlWordUsed}</span></p>
+                        <hr>
+                        <h6>Показатели Восстановления:</h6>
+                        <ul class="list-group list-group-flush mb-3">
+                            <li class="list-group-item">P1 (До): <span class="fw-bold">${quest.pulseP1}</span></li>
+                            <li class="list-group-item">P3 (Через 1 мин): <span class="fw-bold">${quest.pulseP3}</span></li>
+                            <li class="list-group-item text-danger fw-bold">Срок проверки (дней): ${daysLeft}</li>
+                        </ul>
+
+                        <a href="${quest.videoURL}" target="_blank" class="btn btn-outline-primary w-100 mb-3">
+                            СМОТРЕТЬ НЕПРЕРЫВНОЕ ВИДЕО
+                        </a>
+
+                        <div class="mb-3">
+                            <label for="notes-${quest.id}" class="form-label">Комментарии:</label>
+                            <textarea class="form-control" id="notes-${quest.id}" rows="2"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success" onclick="gradeQuest('${quest.id}', 'Зачет')">Поставить ЗАЧЕТ</button>
+                            <button class="btn btn-danger" onclick="gradeQuest('${quest.id}', 'Не зачет')">Поставить НЕЗАЧЕТ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        listContainer.innerHTML += cardHtml;
+    });
+
+    tasksCount.textContent = filteredQuests.length;
+}
+
+// Запуск рендеринга
+if (document.getElementById('questList')) {
+    document.addEventListener('DOMContentLoaded', renderInstructorDashboard);
+    // Привязка фильтра (Для упрощения, мы просто перерисовываем)
+    document.getElementById('filterAll').addEventListener('click', renderInstructorDashboard); 
+}
