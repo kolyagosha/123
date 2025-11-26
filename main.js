@@ -470,3 +470,71 @@ if (document.getElementById('questList')) {
     // Привязка фильтра (Для упрощения, мы просто перерисовываем)
     document.getElementById('filterAll').addEventListener('click', renderInstructorDashboard); 
 }
+
+// === БЛОК: ФУНКЦИИ ДЛЯ АДМИН-ПАНЕЛИ ===
+
+// Функция добавления преподавателя
+function handleAddInstructor(event) {
+    event.preventDefault();
+    
+    // Сбор данных
+    const name = document.getElementById('insName').value;
+    const email = document.getElementById('insEmail').value;
+    const password = document.getElementById('insPassword').value;
+    const role = document.getElementById('insRole').value;
+    
+    // Генерация ID (для симуляции)
+    const newId = role === 'hod' ? 'H' + Math.floor(Math.random() * 1000) : 'I' + Math.floor(Math.random() * 1000);
+
+    const newInstructor = {
+        id: newId,
+        name: name,
+        email: email,
+        password: password, // В реале: хэш пароля
+        role: role
+    };
+
+    // Симуляция записи в базу
+    console.log('--- ADD INSTRUCTOR SIMULATION ---');
+    console.log(newInstructor);
+    
+    document.getElementById('insMessage').innerHTML = `<span class="text-success">✅ Преподаватель ${name} добавлен. ID: ${newId}.</span>`;
+    document.getElementById('addInstructorForm').reset();
+}
+
+// Функция добавления студента
+function handleAddStudent(event) {
+    event.preventDefault();
+
+    // Сбор данных
+    const name = document.getElementById('stuName').value;
+    const code = document.getElementById('stuCode').value.toUpperCase().trim();
+    const group = document.getElementById('stuGroup').value.trim();
+    const instructorId = document.getElementById('stuInstructorId').value.trim();
+    
+    const newId = 'S' + Math.floor(Math.random() * 10000);
+
+    const newStudent = {
+        id: newId,
+        name: name,
+        code: code,
+        group: group,
+        assignedInstructorId: instructorId,
+        // Остальные поля (рост, вес, пульс) будут добавлены студентом при активации
+    };
+
+    // Симуляция записи в базу
+    console.log('--- ADD STUDENT SIMULATION ---');
+    console.log(newStudent);
+    
+    document.getElementById('stuMessage').innerHTML = `<span class="text-success">✅ Студент ${name} добавлен. Код: ${code}. ID: ${newId}.</span>`;
+    document.getElementById('addStudentForm').reset();
+}
+
+// Привязка обработчиков для админ-панели
+if (document.getElementById('addInstructorForm')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('addInstructorForm').addEventListener('submit', handleAddInstructor);
+        document.getElementById('addStudentForm').addEventListener('submit', handleAddStudent);
+    });
+}
