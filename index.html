@@ -6,30 +6,63 @@
     <title>SSRM | Быстрый Зачет по Физкультуре</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; display: flex; flex-direction: column; justify-content: space-between; min-height: 100vh; }
-        .welcome-box { max-width: 600px; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-align: center; margin-top: auto; margin-bottom: auto; }
-        .btn-xl { padding: 15px 30px; font-size: 1.25rem; margin-top: 20px; }
-        footer { padding: 15px; background-color: #343a40; color: #adb5bd; text-align: center; font-size: 0.9em; width: 100%; }
+        /* Общие стили для прижатия футера */
+        body { 
+            background-color: #f8f9fa; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; /* Гарантируем высоту на весь экран */
+        }
+        /* Центрирование основного контента */
+        .content-wrapper {
+            flex-grow: 1; /* Растягиваем, чтобы занять всё доступное место */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .welcome-box { 
+            max-width: 600px; 
+            padding: 40px; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+            text-align: center; 
+        }
+        .btn-xl { 
+            padding: 15px 30px; 
+            font-size: 1.25rem; 
+            margin-top: 20px; 
+        }
+        footer { 
+            padding: 15px; 
+            background-color: #343a40; 
+            color: #adb5bd; 
+            text-align: center; 
+            font-size: 0.9em; 
+            width: 100%; /* Гарантируем ширину футера */
+        }
     </style>
 </head>
 <body>
-
-    <div class="welcome-box">
-        <h1 class="display-5 text-primary">SSRM</h1>
-        <h2 class="h4 mb-3">Система Скоростной Сдачи и Реестра Мониторинга</h2>
-        
-        <p class="lead mb-4">
-            Платформа для **объективной онлайн-сдачи зачета по физкультуре** и получения Индивидуального Фитнес-Сертификата без посещения общих занятий.
-        </p>
-        
-        <div class="d-grid gap-3">
-            <a href="student_login.html" class="btn btn-success btn-xl">
-                Я — Студент (Сдать зачет быстро)
-            </a>
+    <div class="content-wrapper">
+        <div class="welcome-box">
+            <h1 class="display-5 text-primary">SSRM</h1>
+            <h2 class="h4 mb-3">Система Скоростной Сдачи и Реестра Мониторинга</h2>
             
-            <a href="instructor_login.html" class="btn btn-primary btn-xl">
-                Я — Преподаватель (Контроль и Верификация)
-            </a>
+            <p class="lead mb-4">
+                Платформа для **объективной онлайн-сдачи зачета по физкультуре** и получения Индивидуального Фитнес-Сертификата без посещения общих занятий.
+            </p>
+            
+            <div class="d-grid gap-3">
+                <a href="student_login.html" class="btn btn-success btn-xl">
+                    Я — Студент (Сдать зачет быстро)
+                </a>
+                
+                <a href="instructor_login.html" class="btn btn-primary btn-xl">
+                    Я — Преподаватель (Контроль и Верификация)
+                </a>
+            </div>
         </div>
     </div>
 
@@ -39,6 +72,6 @@
         </p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivrjen/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
