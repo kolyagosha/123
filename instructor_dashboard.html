@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель Верификации | SSRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 1400px; margin-top: 30px; margin-bottom: 50px; }
+        .card-quest { border-left: 6px solid; }
+        /* Стили для Светофора Срочности */
+        .border-danger { border-color: #dc3545 !important; } /* Красный: Сегодня последний день */
+        .border-warning { border-color: #ffc107 !important; } /* Желтый: Осталось 4 дня */
+        .border-success { border-color: #28a745 !important; } /* Зеленый: > 7 дней */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-3 text-primary">Панель Верификации SSRM</h1>
+        <p class="lead" id="welcomeMessage">Добро пожаловать, Профессор! Заданий в работе: <span id="tasksCount" class="badge bg-secondary">0</span></p>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
+            <div>
+                <button id="filterAll" class="btn btn-primary btn-sm">Мои Задания</button>
+                <button id="filterOverdue" class="btn btn-danger btn-sm ms-2" style="display: none;">
+                    Просроченные (Аудит)
+                </button>
+            </div>
+            <div>
+                <label for="sortOrder" class="form-label mb-0 me-2">Сортировать по:</label>
+                <select class="form-select form-select-sm d-inline-block w-auto" id="sortOrder">
+                    <option value="timeAsc">По сроку проверки (сначала самые срочные)</option>
+                    <option value="nameAsc">По фамилии студента</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="questList" class="row">
+            </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script> 
+</body>
+</html>
