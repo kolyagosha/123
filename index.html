@@ -3,290 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель Верификации - Кафедра Физкультуры</title>
+    <title>SSRM | Быстрый Зачет по Физкультуре</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; }
-        .container { max-width: 1200px; margin-top: 30px; }
-        .card-student { margin-bottom: 20px; border-left: 5px solid; }
-        .status-light { width: 20px; height: 20px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 10px; }
-        .status-green { background-color: #28a745; } /* Зачет / Отлично */
-        .status-yellow { background-color: #ffc107; } /* Требует внимания / На проверке */
-        .status-red { background-color: #dc3545; }   /* Не зачет / Ошибка */
-        .status-blue { background-color: #0d6efd; }   /* Ожидает выполнения */
-        .timer-badge { font-size: 0.8em; margin-left: 10px; }
+        body { background-color: #f8f9fa; display: flex; flex-direction: column; justify-content: space-between; min-height: 100vh; }
+        .welcome-box { max-width: 600px; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); text-align: center; margin-top: auto; margin-bottom: auto; }
+        .btn-xl { padding: 15px 30px; font-size: 1.25rem; margin-top: 20px; }
+        footer { padding: 15px; background-color: #343a40; color: #adb5bd; text-align: center; font-size: 0.9em; width: 100%; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="https://via.placeholder.com/30/0d6efd/FFFFFF?text=ЦПК" alt="Лого" class="d-inline-block align-text-top me-2">
-                Панель Верификации ЦПК
+
+    <div class="welcome-box">
+        <h1 class="display-5 text-primary">SSRM</h1>
+        <h2 class="h4 mb-3">Система Скоростной Сдачи и Реестра Мониторинга</h2>
+        
+        <p class="lead mb-4">
+            Платформа для **объективной онлайн-сдачи зачета по физкультуре** и получения Индивидуального Фитнес-Сертификата без посещения общих занятий.
+        </p>
+        
+        <div class="d-grid gap-3">
+            <a href="student_login.html" class="btn btn-success btn-xl">
+                Я — Студент (Сдать зачет быстро)
             </a>
-            <span class="navbar-text">
-                Преподаватель: [Имя Преподавателя]
-            </span>
-        </div>
-    </nav>
-
-    <div class="container">
-        <h2 class="mb-4">Мои Студенты: Статус Зачета по Физкультуре</h2>
-
-        <div class="mb-3 d-flex justify-content-between align-items-center">
-            <div>
-                <button class="btn btn-outline-primary btn-sm">Все студенты</button>
-                <button class="btn btn-outline-warning btn-sm ms-2">Требуют внимания</button>
-                <button class="btn btn-outline-success btn-sm ms-2">Сдавшие</button>
-            </div>
-            <div>
-                <label for="sortOrder" class="form-label mb-0 me-2">Сортировать по:</label>
-                <select class="form-select form-select-sm d-inline-block w-auto" id="sortOrder">
-                    <option selected>По фамилии</option>
-                    <option>По статусу</option>
-                    <option>По сроку проверки</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="studentList">
-            <div class="card card-student border-success" data-student-id="STUDENT001">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <span class="status-light status-green"></span>
-                        Иванов Иван Иванович (Группа: ПМ-21)
-                    </h5>
-                    <p class="card-text mb-2">
-                        <small>Факультет: Прикладная Математика | Специальность: ИТ-безопасность</small><br>
-                        <small>Ограничения по здоровью: **Нет** (Основная группа)</small>
-                    </p>
-                    <hr>
-                    <h6>Этапы сдачи:</h6>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **1. Декларация Здоровья:** Заполнено <span class="badge bg-success">ОК</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **2. Тест Техники (30 Отжиманий):**
-                            <div>
-                                <span class="badge bg-success me-2">Зачет</span>
-                                ИИ-анализ: **30 повторов, 92% техника**
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" class="btn btn-sm btn-outline-info ms-2">Смотреть видео</a>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **3. Стресс-тест Восстановления:**
-                            <div>
-                                <span class="badge bg-success me-2">Зачет</span>
-                                Пульс P1: 70, P2: 145, P3: 90 (через 1 мин)
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#pulseChartModal" class="btn btn-sm btn-outline-secondary ms-2">Подробнее (График)</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <span class="me-3 text-muted timer-badge">Проверено: 15.05.2024. Контроль до: 18.05.2024</span>
-                        <button class="btn btn-success btn-sm me-2">Зачет (Одобрено)</button>
-                        <button class="btn btn-outline-danger btn-sm">Не зачет</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card card-student border-warning" data-student-id="STUDENT002">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <span class="status-light status-yellow"></span>
-                        Петрова Анна Сергеевна (Группа: ЮР-20)
-                    </h5>
-                    <p class="card-text mb-2">
-                        <small>Факультет: Юридический | Специальность: Криминальное право</small><br>
-                        <small>Ограничения по здоровью: **Да** (Справка №456 от 10.03.2024 - *Спецгруппа*)</small>
-                    </p>
-                    <hr>
-                    <h6>Этапы сдачи:</h6>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **1. Декларация Здоровья:** Заполнено <span class="badge bg-success">ОК</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **2. Тест Техники (Задание для Спецгруппы):**
-                            <div>
-                                <span class="badge bg-warning me-2">На проверке</span>
-                                Задание: Реферат "Основы ЗОЖ при проблемах с сердцем"
-                                <a href="#" class="btn btn-sm btn-outline-info ms-2">Просмотреть реферат</a>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **3. Стресс-тест Восстановления:** <span class="badge bg-secondary">Ожидает</span>
-                        </li>
-                    </ul>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <span class="me-3 text-danger timer-badge">Срок проверки до: 17.05.2024 (2 дня!)</span>
-                        <button class="btn btn-warning btn-sm me-2">Принять Решение</button>
-                        <button class="btn btn-outline-secondary btn-sm">Отложить</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card card-student border-danger" data-student-id="STUDENT003">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <span class="status-light status-red"></span>
-                        Сидоров Олег Петрович (Группа: ЭК-22)
-                    </h5>
-                    <p class="card-text mb-2">
-                        <small>Факультет: Экономический | Специальность: Финансы</small><br>
-                        <small>Ограничения по здоровью: **Нет** (Основная группа)</small>
-                    </p>
-                    <hr>
-                    <h6>Этапы сдачи:</h6>
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **1. Декларация Здоровья:** Заполнено <span class="badge bg-success">ОК</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **2. Тест Техники (30 Отжиманий):**
-                            <div>
-                                <span class="badge bg-danger me-2">Не зачет</span>
-                                ИИ-анализ: **30 повторов, 45% техника** (ниже допустимого)
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#videoModal" data-video-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" class="btn btn-sm btn-outline-info ms-2">Смотреть видео</a>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            **3. Стресс-тест Восстановления:** <span class="badge bg-secondary">Ожидает</span>
-                        </li>
-                    </ul>
-                    <div class="d-flex justify-content-end align-items-center">
-                        <span class="me-3 text-muted timer-badge">Проверено: 14.05.2024. Пересдача: до 21.05.2024</span>
-                        <button class="btn btn-danger btn-sm me-2">Отправить на пересдачу</button>
-                        <button class="btn btn-outline-secondary btn-sm">Связаться со студентом</button>
-                    </div>
-                </div>
-            </div>
-
+            
+            <a href="instructor_login.html" class="btn btn-primary btn-xl">
+                Я — Преподаватель (Контроль и Верификация)
+            </a>
         </div>
     </div>
 
-    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="videoModalLabel">Просмотр видео квеста</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="ratio ratio-16x9">
-                        <iframe id="videoPlayer" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="pulseChartModal" tabindex="-1" aria-labelledby="pulseChartModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="pulseChartModalLabel">График Пульса Студента</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Здесь будет интерактивный график пульса P1, P2, P3...</p>
-                    <img src="https://via.placeholder.com/400x200?text=График+Пульса" class="img-fluid" alt="График пульса">
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <footer>
+        <p class="mb-0">
+            Это проект **hai-guys-space**. Следите за нашими следующими проектами!
+        </p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Небольшой скрипт для обработки модального окна видео
-        const videoModal = document.getElementById('videoModal');
-        videoModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            const videoSrc = button.getAttribute('data-video-src');
-            const videoPlayer = videoModal.querySelector('#videoPlayer');
-            videoPlayer.src = videoSrc;
-        });
-        videoModal.addEventListener('hide.bs.modal', event => {
-            const videoPlayer = videoModal.querySelector('#videoPlayer');
-            videoPlayer.src = ''; // Останавливаем видео при закрытии модального окна
-        });
-    </script>
 </body>
-
-    <div class="container my-5">
-    <h2 class="text-primary mb-4">Квест: Ускоренная Сертификация (Зачет за Семестр!)</h2>
-
-    <div class="alert alert-warning" role="alert">
-        <h4 class="alert-heading">ВНИМАНИЕ! Этот тест решает, сдаешь ты физкультуру или нет!</h4>
-        <p>Время выполнения всего комплекса: **не более 3 минут!** Видео должно быть непрерывным.</p>
-    </div>
-
-    <div class="card mb-4 bg-light">
-        <div class="card-header bg-primary text-white">Шаг 1: Подготовка к Записи</div>
-        <div class="card-body">
-            <p>1. **Обязательно** запишите или запомните:</p>
-            <h3 class="text-danger mb-3">КОНТРОЛЬНОЕ СЛОВО: <span id="controlWordDisplay">4587КПВ</span></h3>
-            <p>2. Начните видеозапись и **громко произнесите это слово**.</p>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header">Шаг 2: Комплекс Упражнений (До 3 Минут)</div>
-        <div class="card-body">
-            <ol>
-                <li><span class="fw-bold">Отжимания:</span> 30 повторов (допускается 30 секунд отдыха).</li>
-                <li><span class="fw-bold">Приседания:</span> 20 повторов (допускается 30 секунд отдыха).</li>
-                <li><span class="fw-bold">Планка:</span> Удержание 30 секунд.</li>
-            </ol>
-            <p class="text-danger mt-3">⚠️ На видео должен быть виден таймер (часы/секундомер)!</p>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header">Шаг 3: Фиксация Восстановления</div>
-        <div class="card-body">
-            <p class="text-muted">Введите показания пульса, измеренные после завершения комплекса:</p>
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label for="pulseP1" class="form-label">P1 (Пульс до начала):</label>
-                    <input type="number" class="form-control" id="pulseP1" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="pulseP2" class="form-label">P2 (Пульс сразу после планки):</label>
-                    <input type="number" class="form-control" id="pulseP2" required>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label for="pulseP3" class="form-label">P3 (Пульс через 1 мин отдыха):</label>
-                    <input type="number" class="form-control" id="pulseP3" required>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">Шаг 4: Загрузка Видео</div>
-        <div class="card-body">
-            <label for="videoUpload" class="form-label">Загрузите видео комплекса (до 5 мин, макс. 50 МБ):</label>
-            <input class="form-control mb-3" type="file" id="videoUpload" accept="video/*" required>
-            
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="confirmCheckbox" required>
-                <label class="form-check-label" for="confirmCheckbox">
-                    Я подтверждаю, что произнес контрольное слово и выполнил комплекс за время **менее 3 минут**.
-                </label>
-            </div>
-
-            <button id="submitQuestButton" class="btn btn-lg btn-success w-100">Отправить на проверку</button>
-        </div>
-    </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="main.js"></script> </body>
-
-        
-</div>
 </html>
-
-
