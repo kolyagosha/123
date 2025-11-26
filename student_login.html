@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход Студента | SSRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 700px; margin-top: 50px; margin-bottom: 50px; }
+        .card { border: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+        .setup-section { display: none; } /* Скрываем второй этап по умолчанию */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center text-primary mb-4">Вход и Активация Профиля</h1>
+        <div class="card p-4">
+            
+            <div id="verificationSection">
+                <h4 class="mb-3">Шаг 1: Идентификация (Код Вуза)</h4>
+                <p class="text-muted">Для первичного входа найдите себя в списке и введите код активации, полученный в деканате.</p>
+                
+                <form id="verificationForm">
+                    <div class="mb-3">
+                        <label for="studentSelect" class="form-label">Ваша Фамилия и Имя:</label>
+                        <select class="form-select" id="studentSelect" required>
+                            <option value="">Выберите себя...</option>
+                            <option value="S001">Иванов Иван (ПМ-21)</option>
+                            <option value="S002">Петрова Анна (ЮР-20)</option>
+                            <option value="S003">Сидоров Олег (ЭК-22)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="universityCode" class="form-label">Код Активации ВУЗа:</label>
+                        <input type="text" class="form-control" id="universityCode" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100">Проверить и Активировать</button>
+                    <div id="verificationMessage" class="mt-3 text-center"></div>
+                </form>
+            </div>
+
+            <div id="setupSection" class="setup-section">
+                <h4 class="mb-3">Шаг 2: Создание Профиля и Пароля</h4>
+                <form id="setupForm">
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Ваша Электронная почта (логин):</label>
+                        <input type="email" class="form-control" id="userEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPassword" class="form-label">Пароль (минимум 6 символов):</label>
+                        <input type="password" class="form-control" id="userPassword" required minlength="6">
+                    </div>
+                    
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="userAge" class="form-label">Возраст (лет):</label>
+                            <input type="number" class="form-control" id="userAge" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="userHeight" class="form-label">Рост (см):</label>
+                            <input type="number" class="form-control" id="userHeight" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="userWeight" class="form-label">Вес (кг):</label>
+                            <input type="number" class="form-control" id="userWeight" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="" id="healthRestriction" onchange="toggleRestrictionField()">
+                        <label class="form-check-label" for="healthRestriction">
+                            У меня есть ограничения по здоровью (справка).
+                        </label>
+                    </div>
+                    <div id="restrictionDetails" style="display: none;" class="mb-3">
+                         <label for="restrictionUpload" class="form-label">Загрузить скан справки (JPG/PDF):</label>
+                         <input class="form-control" type="file" id="restrictionUpload" accept=".jpg,.jpeg,.png,.pdf">
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" value="" id="consentCheck" required>
+                        <label class="form-check-label" for="consentCheck">
+                            Я согласен с условиями сдачи теста онлайн.
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Создать Аккаунт и Продолжить</button>
+                    <div id="setupMessage" class="mt-3 text-center"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script> 
+</body>
+</html>
