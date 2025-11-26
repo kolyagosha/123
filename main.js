@@ -112,3 +112,87 @@ if (document.getElementById('verificationForm')) {
         window.toggleRestrictionField = toggleRestrictionField;
     });
 }
+
+// === БЛОК: ФУНКЦИИ ДЛЯ СТРАНИЦЫ 'student_ultimate_quest.html' ===
+
+// 1. ФУНКЦИЯ ГЕНЕРАЦИИ КОНТРОЛЬНОГО СЛОВА
+function generateControlWord() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    const codeLength = 6; 
+
+    for (let i = 0; i < codeLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters.charAt(randomIndex);
+    }
+    return code;
+}
+
+// 2. ФУНКЦИЯ ОТОБРАЖЕНИЯ СЛОВА (вызывается при загрузке страницы)
+function displayControlWord() {
+    const word = generateControlWord();
+    const displayElement = document.getElementById('controlWordDisplay');
+    
+    if (displayElement) {
+        displayElement.textContent = word;
+    }
+}
+
+// 3. ФУНКЦИЯ ОБРАБОТКИ ОТПРАВКИ КВЕСТА
+function submitQuest(event) {
+    event.preventDefault(); // Предотвращаем перезагрузку страницы
+    
+    // 1. Сбор данных
+    const studentId = localStorage.getItem('currentStudentId') || 'S_UNKNOWN'; // ID студента из локального хранилища
+    const controlWord = document.getElementById('controlWordDisplay').textContent;
+    const pulseP1 = document.getElementById('pulseP1').value;
+    const pulseP2 = document.getElementById('pulseP2').value;
+    const pulseP3 = document.getElementById('pulseP3').value;
+    const videoFile = document.getElementById('videoUpload').files[0];
+    const isConfirmed = document.getElementById('confirmCheckbox').checked;
+
+    // 2. БАЗОВАЯ ПРОВЕРКА
+    if (!pulseP1 || !pulseP2 || !pulseP3 || !videoFile || !isConfirmed) {
+        document.getElementById('submissionMessage').innerHTML = '<span class="text-danger">Пожалуйста, заполните все поля, загрузите видео и подтвердите выполнение.</span>';
+        return;
+    }
+
+    // 3. СИМУЛЯЦИЯ ЗАГРУЗКИ ВИДЕО В FIREBASE STORAGE
+    // В реальном коде здесь происходит загрузка файла и получение URL.
+    const videoURL = `https://firebasestorage.com/videos/${studentId}_${Date.now()}.mp4`; 
+    
+    // 4. ФОРМИРОВАНИЕ ОБЪЕКТА ДАННЫХ ДЛЯ FIRESTORE
+    const questResult = {
+        studentId: studentId,
+        dateSubmitted: new Date().toISOString(),
+        controlWordUsed: controlWord,
+        videoURL: videoURL,
+        pulseP1: parseInt(pulseP1),
+        pulseP2: parseInt(pulseP2),
+        pulseP3: parseInt(pulseP3),
+        status: 'Ожидает Проверки Преподавателем',
+        checkDeadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // Дедлайн проверки: 14 дней
+    };
+
+    // 5. СИМУЛЯЦИЯ ЗАПИСИ В FIRESTORE
+    // В MVP мы записываем результат в локальное хранилище, чтобы показать его на следующей странице
+    localStorage.setItem('lastQuestResult', JSON.stringify(questResult));
+    
+    document.getElementById('submissionMessage').innerHTML = '<span class="text-success">🎉 Тест отправлен! Переход на страницу статуса...</span>';
+    
+    setTimeout(() => {
+        window.location.href = 'student_dashboard.html'; // Переход на страницу статуса
+    }, 1500); 
+}
+
+
+// === ПРИВЯЗКА СОБЫТИЙ ДЛЯ QUEST-СТРАНИЦЫ ===
+if (document.getElementById('questSubmissionForm')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        // Генерируем контрольное слово при загрузке
+        displayControlWord(); 
+        
+        // Привязываем функцию отправки к кнопке
+        document.getElementById('questSubmissionForm').addEventListener('submit', submitQuest);
+    });
+}
