@@ -269,3 +269,49 @@ function renderStudentDashboard() {
 if (document.getElementById('statusContainer')) {
     document.addEventListener('DOMContentLoaded', renderStudentDashboard);
 }
+
+// === БЛОК: МОКОВЫЕ ДАННЫЕ И ВХОД ПРЕПОДАВАТЕЛЯ ===
+
+// Имитация базы данных преподавателей и их ролей
+const mockInstructorAccounts = [
+    { email: 'prof.ivanov@ssrm.edu', password: 'pass123', role: 'instructor', id: 'I001', name: 'Иванов С.В.' },
+    { email: 'head.petrov@ssrm.edu', password: 'admin456', role: 'hod', id: 'H001', name: 'Петров А.Б.' } // HoD - Head of Department
+];
+
+// Функция обработки входа преподавателя
+function handleInstructorLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('instructorEmail').value.trim();
+    const password = document.getElementById('instructorPassword').value.trim();
+    const message = document.getElementById('loginMessage');
+    
+    // 1. Поиск аккаунта в моковой базе
+    const instructor = mockInstructorAccounts.find(
+        acc => acc.email === email && acc.password === password
+    );
+
+    if (instructor) {
+        // УСПЕХ!
+        message.innerHTML = `<span class="text-success">✅ Добро пожаловать, ${instructor.name}!</span>`;
+        
+        // 2. Сохраняем данные сессии в локальное хранилище
+        localStorage.setItem('currentInstructorId', instructor.id);
+        localStorage.setItem('currentInstructorRole', instructor.role); 
+        
+        // 3. Переход на дашборд верификации
+        setTimeout(() => {
+            window.location.href = 'instructor_dashboard.html';
+        }, 1000); 
+        
+    } else {
+        // ОШИБКА
+        message.innerHTML = '<span class="text-danger">❌ Неверный логин или пароль.</span>';
+    }
+}
+
+// Привязка обработчика для страницы входа преподавателя
+if (document.getElementById('instructorLoginForm')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('instructorLoginForm').addEventListener('submit', handleInstructorLogin);
+    });
+}
