@@ -1,0 +1,85 @@
+/* --- 1. Глобальные Стили и Лейаут --- */
+body {
+    background-color: #f8f9fa; /* Светло-серый фон для всех страниц */
+    color: #343a40; /* Темный текст */
+}
+
+.container {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/* Общий стиль для всех карточек и форм (для чистоты и профессионализма) */
+.card {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease; /* Плавный переход для hover-эффектов */
+}
+
+.login-box, .welcome-box {
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+}
+
+/* --- 2. Стили для Заголовков и Бренда --- */
+.text-primary {
+    color: #007bff !important; /* Основной цвет бренда SSRM */
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+/* --- 3. Стили для Панели Верификации (Карточки) --- */
+
+/* Общий стиль для карточек заданий преподавателя */
+.card-quest {
+    border-left: 6px solid;
+    transition: all 0.3s ease;
+}
+
+/* Индивидуальные стили для Светофора Срочности (Logic: 7-4-1) */
+
+/* ЗЕЛЕНЫЙ: Всё хорошо, более 4 дней на проверку */
+.border-success { border-color: #28a745 !important; } 
+.bg-success { background-color: #28a745 !important; }
+
+/* ЖЕЛТЫЙ: Срочность, осталось 4 дня (warning) */
+.border-warning { border-color: #ffc107 !important; }
+.bg-warning { background-color: #ffc107 !important; }
+.text-warning { color: #ffc107 !important; }
+
+/* КРАСНЫЙ/ТЕМНЫЙ: Критично, 1 день или просрочено (danger) */
+.border-danger { border-color: #dc3545 !important; }
+.bg-danger { background-color: #dc3545 !important; }
+.text-danger { color: #dc3545 !important; }
+
+/* ТЕМНЫЙ (ПРОСРОЧЕНО) */
+.border-dark { border-color: #343a40 !important; }
+.bg-dark { background-color: #343a40 !important; }
+.text-dark { color: #343a40 !important; }
+
+
+/* --- 4. Стили для Дашборда Студента --- */
+
+/* Секция статуса */
+.status-box { 
+    padding: 30px; 
+    border-radius: 12px; 
+    text-align: center; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Статус "На проверке" */
+.status-on-review { background-color: #fff8e1; border: 1px solid #ffecb3; color: #795548; }
+/* Статус "Зачет" */
+.status-passed { background-color: #e8f5e9; border: 1px solid #c8e6c9; color: #388e3c; }
+/* Статус "Не зачет" */
+.status-failed { background-color: #ffebee; border: 1px solid #ffcdd2; color: #d32f2f; }
