@@ -196,3 +196,76 @@ if (document.getElementById('questSubmissionForm')) {
         document.getElementById('questSubmissionForm').addEventListener('submit', submitQuest);
     });
 }
+
+// === НОВЫЙ БЛОК: ФУНКЦИИ ДЛЯ СТРАНИЦЫ 'student_dashboard.html' ===
+
+function renderStudentDashboard() {
+    const statusContainer = document.getElementById('statusContainer');
+    if (!statusContainer) return; // Проверка, что мы на нужной странице
+
+    // 1. Получаем данные последнего квеста
+    const resultString = localStorage.getItem('lastQuestResult');
+    if (!resultString) {
+        statusContainer.innerHTML = '<div class="alert alert-info">Тест еще не сдан. Пожалуйста, сдайте тест на предыдущей странице.</div>';
+        return;
+    }
+    
+    const result = JSON.parse(resultString);
+    const deadline = new Date(result.checkDeadline);
+    const now = new Date();
+    
+    // СВОДКА ДАННЫХ ВНИЗУ СТРАНИЦЫ
+    document.getElementById('controlWordSummary').textContent = result.controlWordUsed;
+    document.getElementById('submissionDateSummary').textContent = new Date(result.dateSubmitted).toLocaleDateString('ru-RU');
+    document.getElementById('pulseP3Summary').textContent = result.pulseP3;
+
+    // 2. ОПРЕДЕЛЕНИЕ ТЕКУЩЕГО СТАТУСА (СИМУЛЯЦИЯ)
+    let statusClass = 'status-on-review';
+    let statusText = 'Ожидает Проверки Преподавателем';
+    let details = `Крайний срок для проверки: ${deadline.toLocaleDateString('ru-RU')}.`;
+    let appealButton = '';
+
+    if (result.status === 'Зачет') {
+        statusClass = 'status-passed';
+        statusText = '✅ ЗАЧЕТ ПОЛУЧЕН!';
+        details = 'Ваш результат был успешно верифицирован.';
+    } else if (result.status === 'Не зачет') {
+        statusClass = 'status-failed';
+        statusText = '❌ НЕ ЗАЧЕТ';
+        
+        // Логика апелляции: 14 дней + 3 дня буфера
+        const appealEndDate = new Date(deadline.getTime() + (3 * 24 * 60 * 60 * 1000));
+        const appealEndDateStr = appealEndDate.toLocaleDateString('ru-RU');
+        
+        details = `Необходимо пересдать тест. Причина: ${result.instructorNotes || 'Форма не соблюдена или читинг.'} 
+                   <br>Срок для оспаривания результата: до ${appealEndDateStr} (3 дня).`;
+        
+        if (now < appealEndDate) {
+            appealButton = `<div class="appeal-section">
+                                <p class="text-primary fw-bold">Хотите оспорить результат?</p>
+                                <button class="btn btn-primary btn-sm" onclick="alert('Заявка на оспаривание отправлена Заведующему Кафедрой!')">
+                                    Оспорить результат (До ${appealEndDateStr})
+                                </button>
+                            </div>`;
+        }
+    } else if (now > deadline && result.status === 'Ожидает Проверки Преподавателем') {
+         // Просрочка, эскалация
+        statusClass = 'status-failed';
+        statusText = '⚠️ ПРОСРОЧЕН СРОК ПРОВЕРКИ';
+        details = `Проверка просрочена. Ваше задание автоматически передано на контроль Заведующему Кафедрой.`;
+    }
+
+    // 3. РЕНДЕРИНГ
+    statusContainer.innerHTML = `
+        <div class="status-box ${statusClass} mb-4">
+            <h2>${statusText}</h2>
+            <p class="lead">${details}</p>
+        </div>
+        ${appealButton}
+    `;
+}
+
+// Привязываем функцию к загрузке страницы, если мы на student_dashboard.html
+if (document.getElementById('statusContainer')) {
+    document.addEventListener('DOMContentLoaded', renderStudentDashboard);
+}
